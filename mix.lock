@@ -1,0 +1,8 @@
+%{"bump": {:hex, :bump, "0.1.0", "11235ad9bcb275e7e752409f37c603b1138149c8dd551f17c802c961ec7ea463", [:mix], []},
+  "chunky_svg": {:hex, :chunky_svg, "0.0.4", "0661750ca42c82b05d49f60809ccaeaf0ae1ca173b2c7fe76153e4a9fdc79f7d", [:mix], [{:xml_builder, "~> 0.0.5", [hex: :xml_builder, optional: false]}]},
+  "extwitter": {:hex, :extwitter, "0.7.2", "15b40b75452164c312422dd02a3e849d777cf5d879fbf4b8f5f37c98ec96d334", [:mix], [{:poison, "~> 2.0", [hex: :poison, optional: false]}]},
+  "mogrify": {:hex, :mogrify, "0.4.0", "bed8602f9e11bbdc9f795cf1e8f007368a630a8cd6a6b15b241ab8e311c332c5", [:mix], []},
+  "mogrify_draw": {:hex, :mogrify_draw, "0.1.0", "8312bb7ba3e539c6834478c76b4ff4a226717e6180c1889a59d471954667bb31", [:mix], [{:mogrify, "~> 0.4.0", [hex: :mogrify, optional: false]}]},
+  "oauth": {:git, "https://github.com/tim/erlang-oauth.git", "fca8163e8f7af867015e2413c4b03a4f8f4df0c9", []},
+  "poison": {:hex, :poison, "2.2.0", "4763b69a8a77bd77d26f477d196428b741261a761257ff1cf92753a0d4d24a63", [:mix], []},
+  "xml_builder": {:hex, :xml_builder, "0.0.8", "dea10735e15c91e24582e41ee2d3282b7f0177a5b42d6268096a6221ba83226f", [:mix], []}}

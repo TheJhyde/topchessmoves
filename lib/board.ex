@@ -1,14 +1,17 @@
 defmodule Board do
-	# If this was to create absurd yet plausible chess configurations, then it should have
-	# some limits placed on it. In particular:
-	# 	-No more than 8 pawns on each side
-	#   -Pawns cannot be in the final rows
-	# 	-There should be some bias towards pieces being on their own side
+	@moduledoc """
+		Provides functions related to chess boards. Boards are stored as a list of structs
+	"""
+
+	@doc """
+		Generates a random board
+	"""
 	def random_board do
 		random_board([], :rand.uniform(20) + 4)
 	end
 
 	def random_board(board, 0) do
+		# Adds a king last, to guarantee each board has two kings
 		# If the king is placed on top of the other king, we might not get one of each kind
 		add_piece(board, Piece.new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, :W, :K))
 		|> add_piece(Piece.new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, :B, :K)) 
@@ -19,6 +22,9 @@ defmodule Board do
 		|> random_board(pieces - 1)
 	end
 
+	@doc """
+		Provides the standard opening board
+	"""
 	def starter do
 		pawns = for n <- 0..7, do: [Piece.new_piece(n, 6, :W, :P), Piece.new_piece(n, 1, :B, :P)]
 		[Piece.new_piece(0, 0, :B, :R), Piece.new_piece(1, 0, :B, :N), Piece.new_piece(2, 0, :B, :B), 
@@ -29,18 +35,18 @@ defmodule Board do
 		Piece.new_piece(6, 7, :W, :N), Piece.new_piece(7, 7, :W, :R)] ++ List.flatten(pawns)
 	end
 
-	def just_pawns do
-		[Piece.new_piece(1, 1, :B, :P), Piece.new_piece(2, 1, :B, :P), Piece.new_piece(3, 1, :B, :P), Piece.new_piece(4, 1, :B, :P),
-		Piece.new_piece(6, 6, :W, :P), Piece.new_piece(5, 6, :W, :P), Piece.new_piece(4, 6, :W, :P), Piece.new_piece(3, 6, :W, :P)]
-	end
-
+	@doc """
+		Add a piece to a board. Will remove any pieces that are already at the place
+	"""
 	def add_piece(board, piece) do
 		Enum.reject(board, fn(p) -> Piece.at?(piece.x, piece.y, p) end)
 		|> Enum.concat([piece])
 	end
-	
-	# Takes a given piece, removes it from the board, adds it back at the new place
-	# Removes any pieces that were already at that place
+
+	@doc """
+		Takes a given piece, removes it from the board, adds it back at the new place
+		Removes any pieces that were already at that place
+	"""
 	def move_piece(board, piece, x, y) do
 		board = Enum.reject(board, fn(p) -> p == piece || Piece.at?(x, y, p) end)
 		cond do
@@ -55,8 +61,10 @@ defmodule Board do
 		end
 	end
 
+	@doc """
+		Returns the piece at the given x, y coordinates or nil if there's no piece there
+	"""
 	def get_piece(board, x, y) do
-		# Returns the piece at the given location or nothing
 		piece = Enum.filter(board, fn board_piece -> Piece.at?(x, y, board_piece) end)
 		if piece == [] do
 			nil

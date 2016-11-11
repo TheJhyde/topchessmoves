@@ -1,4 +1,8 @@
 defmodule MoveName do
+	@moduledoc """
+		Generates chess move names
+	"""
+
 	# List of country names from https://github.com/dariusk/corpora/blob/master/data/geography/countries.json
 	# with a few small edits I made
 	@places ~w(Afghanistan Albania Algeria Andorra Angola Argentina Armenia Australia Austria 
@@ -44,6 +48,9 @@ defmodule MoveName do
 		Villemson Vinogradov Vitolins Wade Wagner Ware Winawer Wolf Worrall Zaitsev Zilbermints 
 		Zvjaginsev Dracula)
 	
+	@doc """
+		Generates a move name, from a variety of formats
+	"""
 	def name do
 		formats = [
 			fn -> "The #{person_name} #{term}" end,
@@ -61,6 +68,9 @@ defmodule MoveName do
 		
 	end
 
+	@doc """
+		Evaluates the selection which might be a string or might be a function
+	"""
 	def bucket_eval(word) when is_function(word) do
 		word.()
 	end
@@ -69,6 +79,9 @@ defmodule MoveName do
 		word
 	end
 
+	@doc """
+		Generates a chess term, what kind of move it is.
+	"""
 	def term do
 		terms = ~w(Defense System Opening Gambit Game Variation Mate Attack Position) 
 			++ [fn -> "Counter-#{term}" end, fn -> "Variation of #{name}" end, 
@@ -81,29 +94,20 @@ defmodule MoveName do
 		end
 	end
 
-	# Given the number of names, we'll practically never get combination names. Which is too bad
+	@doc """
+		Uses markov chain to generate a new person's name
+	"""
 	def person_name do
 		dictionary = map_all_names(@names)
 		key = Map.keys(dictionary)
 		|> Enum.filter(fn x -> String.capitalize(x) == x end)
 		|> Enum.random
 		markov_generate(key, dictionary, key)
-		# bucket_eval(Enum.random(names))
 	end
 
-	def string_split(string, size) do
-		string_split(string, size, [])
-	end
-
-	def string_split("", _, acc) do
-		acc ++ [""]
-	end
-
-	def string_split(string, size, acc) do
-		{head, tail} = String.split_at(string, size)
-		string_split(tail, size, acc ++ [head])
-	end
-
+	@doc """
+		Given a dictionary, generates a name
+	"""
 	def markov_generate(nil, _, acc) do
 		acc
 	end
@@ -117,21 +121,24 @@ defmodule MoveName do
 				chunk = Enum.filter(possible_chunks, fn(x) -> String.length(x) > 1 end)
 				|> Enum.random
 				markov_generate(String.at(chunk, 1), dictionary, acc <> chunk)
-			# Try to end if the chunk is too large
+			# If this a letter which sometimes ends names, end the name one out of every three times.
 			Enum.any?(possible_chunks, fn(x) -> String.length(x) < 1 end) && :rand.uniform(3) == 1 ->
 				chunk = Enum.filter(possible_chunks, fn(x) -> String.length(x) < 1 end)
 				|> Enum.random
 				markov_generate(String.at(chunk, 1), dictionary, acc <> chunk)
-			# Otherwise, just pick a chunk and go for it
+			# Otherwise, just pick a chunk and continue
 			true ->
 				chunk = Enum.random(possible_chunks)
 				markov_generate(String.at(chunk, 1), dictionary, acc <> chunk)
 		end
 	end
 
+	@doc """
+		Takes a list of names and returns a map of single letters keys and the two letter combos
+		Which follow them.
+	"""
 	def map_all_names(names) do
 		map_all_names(names, %{})
-		# And then I'd like to remove all of the duplicate entries for key
 		|> Enum.map(fn({k, v}) -> {k, Enum.uniq(v)} end)
 		|> Map.new
 	end
@@ -144,6 +151,9 @@ defmodule MoveName do
 		map_all_names(tail, map_name(String.split_at(head, 1), map))
 	end
 
+	@doc """
+		Maps an individual name
+	"""
 	def map_name({"", ""}, map) do
 		map
 	end

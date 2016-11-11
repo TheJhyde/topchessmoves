@@ -1,18 +1,23 @@
+# Draws the board using ImageMagick
 defmodule Draw do
+	@moduledoc """
+		Uses ImageMagick to draw the board
+	"""
 
 	@square_size 60
 
-	# def example do
-	# 	System.cmd("convert", ["board.png", "-font", "ArialUnicode", "-pointsize", "50", 
-	# 		"-draw", "gravity northwest fill black text 2,0 \'♖\'", "new_board.png"], stderr_to_stdout: true)
-	# end
-
+	@doc """
+		Takes a set of files names and turns them into a gif
+	"""
 	def draw_gif(files) do
 		System.cmd("convert", ["-delay", "100", "-dispose", "previous"] 
 			++ files 
 			++ [List.last(files), "-loop", "0", "animation.gif"])
 	end
 
+	@doc """
+		Given a board, it'll draw it and give it the name provided
+	"""
 	def draw_board(pieces, filename) do
 		draw_board(pieces, filename, "gravity northwest ")
 	end
@@ -48,7 +53,15 @@ defmodule Draw do
 	end
 end
 
+# 
 defmodule DrawBoard do
+	@moduledoc """
+		Prints a board to the command line
+	"""
+
+	@doc """
+		Prints a board to the command line. Useful for debugging
+	"""
 	def draw(board) do
 		draw(0, 0, board, "|")
 	end

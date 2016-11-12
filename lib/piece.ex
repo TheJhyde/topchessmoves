@@ -54,9 +54,6 @@ defmodule Piece do
 		new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, Enum.random(@colors), type)
 	end
 
-	@doc """
-		Given a direction a piece can move in, provides a list of all rotations of that direction
-	"""
 	defp rotate_directions({a, a}), do: [{a, a}, {-a, a}, {a, -a}, {-a, -a}]
 	defp rotate_directions({a, 0}), do: rotate_directions({0, a})
 	defp rotate_directions({0, a}), do: [{a, 0}, {-a, 0}, {0, a}, {0, -a}]
@@ -95,10 +92,6 @@ defmodule Piece do
 	end
 
 	# This seems a little awkward: is this entrance function really required?
-	@doc """
-		Takes a given direction and follows it as many times as the piece can move
-		Or until it hits a wall.
-	"""
 	defp trace_direction({dX, dY}, x, y, times), do: trace_direction({dX, dY}, x + dX, y + dY, times, [])
 
 	defp trace_direction(_, _, _, 0, acc), do: acc

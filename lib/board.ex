@@ -7,19 +7,22 @@ defmodule Board do
 		Generates a random board
 	"""
 	def random_board do
-		random_board([], :rand.uniform(20) + 4)
+		pawns = for _ <- 0..7, do: [{:W, :P}, {:B, :P}]
+		bag = [{:W, :N}, {:W, :N}, {:B, :N}, {:B, :N}, {:W, :R}, {:W, :R}, {:B, :R}, {:B, :R},
+			   {:W, :B}, {:W, :B}, {:B, :B}, {:B, :B}, {:W, :Q}, {:B, :Q}] ++ List.flatten(pawns)
+		random_board([], bag, :rand.uniform(20) + 4)
 	end
 
-	def random_board(board, 0) do
-		# Adds a king last, to guarantee each board has two kings
+	def random_board(board, _, 0) do
 		# If the king is placed on top of the other king, we might not get one of each kind
 		add_piece(board, Piece.new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, :W, :K))
 		|> add_piece(Piece.new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, :B, :K)) 
 	end
 
-	def random_board(board, pieces) do
-		add_piece(board, Piece.random_piece)
-		|> random_board(pieces - 1)
+	def random_board(board, bag, pieces) do
+		{color, type} = Enum.random(bag)
+		add_piece(board, Piece.random_piece(color, type))
+		|> random_board(List.delete(bag, {color, type}), pieces - 1)
 	end
 
 	@doc """

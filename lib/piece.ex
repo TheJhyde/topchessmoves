@@ -54,6 +54,14 @@ defmodule Piece do
 		new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, Enum.random(@colors), type)
 	end
 
+	def random_piece(color, :P) do
+		new_piece(:rand.uniform(8) - 1, :rand.uniform(6), color, :P)
+	end
+
+	def random_piece(color, type) do
+		new_piece(:rand.uniform(8) - 1, :rand.uniform(8) - 1, color, type)
+	end
+
 	defp rotate_directions({a, a}), do: [{a, a}, {-a, a}, {a, -a}, {-a, -a}]
 	defp rotate_directions({a, 0}), do: rotate_directions({0, a})
 	defp rotate_directions({0, a}), do: [{a, 0}, {-a, 0}, {0, a}, {0, -a}]
